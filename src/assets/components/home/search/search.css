@@ -1,0 +1,96 @@
+.search__bar {
+  width: 100%;
+  height: var(--header-height);
+  position: fixed;
+  top: 0;
+  left: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  z-index: var(--z-fixed);
+}
+
+.search__bar-box {
+  display: flex;
+  align-items: center;
+  background-color: #f2f2f2;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.search__input {
+  border: none;
+  outline: none;
+  background: none;
+  margin-left: 8px;
+  font-size: 16px;
+}
+
+.hide-search {
+  display: none;
+  background-color: aliceblue;
+  font-size: 15px;
+  padding: 6px 7px;
+  border-radius: 20px;
+}
+
+.show {
+  display: none !important;
+}
+
+.nav__logo {
+  color: var(--title-color);
+}
+
+/* Breakspoints */
+@media screen and (max-width: 992px) {
+}
+
+@media screen and (max-width: 768px) {
+  .search__bar {
+    width: 100%;
+    height: var(--header-height);
+    position: fixed;
+    top: 0;
+    left: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    padding: 5px 20px;
+    z-index: var(--z-fixed);
+    display: none;
+  }
+
+  .search__bar-box {
+    position: relative;
+    margin: auto;
+    height: 2rem;
+    height: 100%;
+  }
+
+  .show__search-bar {
+    display: block;
+  }
+
+  .hide-search {
+    display: block;
+    order: 3;
+    margin-left: auto;
+  }
+
+  .search__input {
+    width: 90%;
+  }
+
+  .show {
+    order: 3;
+    display: block !important;
+  }
+}
+
+@media screen and (max-width: 576px) {
+}
+
+@media screen and (max-width: 350px) {
+}

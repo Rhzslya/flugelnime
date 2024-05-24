@@ -1,0 +1,83 @@
+.dark_mode_label {
+  width: 55px;
+  height: 25px;
+  position: relative;
+  display: block;
+  background: #ebebeb;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.dark_mode_label:after {
+  content: "";
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: 2.5px;
+  left: 2.5px;
+  background: white;
+  border-radius: 20px;
+
+  transition: 0.3s;
+}
+.dark_mode_input {
+  width: 0;
+  height: 0;
+  visibility: hidden;
+}
+.dark_mode_input:checked + .dark_mode_label {
+  background: #242424;
+}
+.dark_mode_input:checked + .dark_mode_label:after {
+  left: 52.5px;
+  transform: translateX(-100%);
+  background-color: white;
+}
+.dark_mode_label:active:after {
+  width: 30px;
+}
+
+.dark_mode_label svg {
+  position: absolute;
+  width: 15px;
+  top: 50%;
+  left: 50%;
+  transform: translate(0%, -50%);
+  z-index: 100;
+}
+.dark_mode_label svg.sun {
+  left: 5px;
+  fill: #da701a;
+  transition: 0.3s;
+}
+.dark_mode_label svg.moon {
+  left: 35px;
+  fill: #7e7e7e;
+  transition: 0.3s;
+}
+.dark_mode_input:checked + .dark_mode_label svg.sun {
+  fill: #7e7e7e;
+}
+.dark_mode_input:checked + .dark_mode_label svg.moon {
+  fill: #fff;
+}
+
+/* Breakspoints */
+
+@media screen and (max-width: 992px) {
+}
+
+@media screen and (max-width: 768px) {
+  .dark_mode_label {
+    order: 2;
+  }
+
+  .hide {
+    display: none;
+  }
+}
+@media screen and (max-width: 576px) {
+}
+
+@media screen and (max-width: 350px) {
+}
