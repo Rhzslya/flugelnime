@@ -46,6 +46,20 @@
 .box__pagination nav ul li button svg {
 }
 
-.box__pagination nav ul li button:hover {
-  background-color: rgb(57, 17, 153);
+.box__pagination nav ul li button {
+  transition: all 0.5s;
+}
+
+.box__pagination nav ul li button.active {
+  background-color: rgb(223, 228, 231);
+  font-weight: bold;
+}
+
+.box__pagination nav ul li button.disabled {
+  cursor: not-allowed;
+}
+
+.pagination-button.hidden {
+  opacity: 0.2;
+  cursor: not-allowed;
 }

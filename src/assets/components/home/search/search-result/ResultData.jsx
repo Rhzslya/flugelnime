@@ -1,15 +1,46 @@
 import React from "react";
 import MyPagination from "../../../pagination/MyPagination";
-
+import { useLocation } from "react-router-dom";
 export default function ResultData({
-  getQuery,
   currentPage,
-  currentPost,
-  pageNumbers,
-  searchQuery,
+  searchAnimes,
   setCurrentPage,
-  onPageChange,
+  navigate,
 }) {
+  // Pages && Pagination
+
+  const postPerPage = 10;
+  const lastPostIndex = currentPage * postPerPage;
+  const firstPostIndex = lastPostIndex - postPerPage;
+  const currentPost = searchAnimes.slice(firstPostIndex, lastPostIndex);
+  const totalPost = searchAnimes.length;
+
+  let pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(totalPost / postPerPage); i++) {
+    pageNumbers.push(i);
+  }
+  // get Query
+  function useQuery() {
+    return new URLSearchParams(useLocation().search);
+  }
+
+  let queryVal = useQuery();
+  let getQuery = queryVal.get("q");
+  const buildQueryString = (page) => {
+    const params = new URLSearchParams(location.search);
+
+    if (page !== 1) {
+      params.set("page", page);
+    } else {
+      params.delete("page");
+    }
+    return `?${params.toString()}`;
+  };
+  const onPageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    const queryString = buildQueryString(pageNumber);
+    navigate(queryString);
+  };
   return (
     <div className="home__anime__list">
       <div className="last__title title__list">

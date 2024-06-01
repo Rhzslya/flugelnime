@@ -58,7 +58,7 @@ export default function AnimeMovies() {
     navigate(queryString);
   };
   return (
-    <div className="movies__anime__list">
+    <div className="movies__anime__list box__content">
       <div className="last__title title__list">
         <h3>Movies</h3>
       </div>
