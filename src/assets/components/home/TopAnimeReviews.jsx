@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function TopAnimeReviews() {
   const [animeTopRanks, setAnimeTopRanks] = useState([]);
@@ -76,7 +77,7 @@ export default function TopAnimeReviews() {
 
   return (
     <div
-      className="w-full h-full rounded bg-center bg-auto duration-500 img__slider"
+      className="w-full h-full relative rounded bg-center bg-cover duration-500 img__slider"
       style={{
         backgroundImage: `url(${
           animeTopRanks.length > 0 &&
@@ -84,13 +85,26 @@ export default function TopAnimeReviews() {
         })`,
       }}
     >
-      <div className="w-full h-full  rounded opacity-95 flex items-center justify-between px-4 py-3">
-        {animeTopRanks.length > 0 && (
-          <div className="slide__info">
-            <h3>{animeTopRanks[currentIndex].title}</h3>
+      <div className="overlay absolute top-0 left-0 w-full h-full bg-black opacity-50 rounded"></div>
+      <Link to="" className="relative z-10">
+        <div className="w-full h-full rounded">
+          <div className="h-full">
+            {animeTopRanks.length > 0 && (
+              <div className="slide__info p-2 ">
+                <h3 className="mt-4 text-neutral-100 text-sm">
+                  TOP ANIME REVIEWS THIS WEEK
+                </h3>
+
+                <div className="mt-2">
+                  <h3 className="text-neutral-100 text-sm font-bold">
+                    {animeTopRanks[currentIndex].title}
+                  </h3>
+                </div>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </div>
+      </Link>
     </div>
   );
 }

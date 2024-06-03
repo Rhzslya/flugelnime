@@ -79,7 +79,6 @@ a {
 
 button {
   cursor: pointer;
-  border: none;
   outline: none;
 }
 
@@ -120,10 +119,10 @@ body {
   margin-right: auto;
 }
 
-.grid {
+/* .grid {
   display: grid;
   gap: 1.5rem;
-}
+} */
 
 /* Buttons */
 .button {

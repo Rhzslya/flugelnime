@@ -6,7 +6,6 @@ export default function MyPagination({
   pageNumbers,
   onPageChange,
 }) {
-  const [visiblePrevious, setVisiblePrevious] = useState(false);
   const totalPages = pageNumbers.length;
   let startPage, endPage;
 
@@ -26,12 +25,12 @@ export default function MyPagination({
 
   const visiblePages = pageNumbers.slice(startPage - 1, endPage);
   return (
-    <div className="box__pagination">
+    <div className="bg-slate-600">
       <nav>
-        <ul className="pagination">
+        <ul className="flex justify-center items-center py-2">
           <li>
             <button
-              className={`pagination-button hover:bg-slate-300 ${
+              className={`flex justify-center items-center text-sm bg-sky-100 py-1 px-2 rounded-s-lg border border-gray-700 font-medium hover:bg-sky-300 hover:text-neutral-100 duration-300 ${
                 currentPage === 1 ? "hidden" : ""
               }`}
               onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
@@ -42,9 +41,11 @@ export default function MyPagination({
           {visiblePages.map((page) => (
             <li key={page}>
               <button
-                className={`pagination-button ${
-                  currentPage === page ? "active" : ""
-                } hover:bg-slate-300`}
+                className={`flex justify-center items-center  py-1 px-3 border-y border-r border-gray-700 font-medium hover:bg-sky-300 hover:text-neutral-100 duration-300 ${
+                  currentPage === page
+                    ? "bg-sky-300 text-neutral-100 text-base"
+                    : "bg-sky-100 text-sm"
+                }`}
                 onClick={() => onPageChange(page)}
               >
                 {page}
@@ -56,7 +57,7 @@ export default function MyPagination({
               onClick={() =>
                 onPageChange(Math.min(currentPage + 1, totalPages))
               }
-              className={`pagination-button hover:bg-slate-300 ${
+              className={`flex justify-center items-center text-sm bg-sky-100 py-1 px-2 rounded-e-lg border-y border-r border-gray-700 font-medium hover:bg-sky-300 hover:text-neutral-100 duration-300 ${
                 currentPage === totalPages ? "hidden" : ""
               }`}
             >
