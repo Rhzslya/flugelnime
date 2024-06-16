@@ -14,7 +14,7 @@ export default function Header({
   const handleHomeClick = (e) => {
     e.preventDefault();
     setCurrentPage(1);
-    navigate("/");
+    navigate("/flugelnime/");
   };
 
   const capitalizeFirst = (string) => {

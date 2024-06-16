@@ -1,5 +1,3 @@
-import React from "react";
-
 const Season = ({ children }) => {
   return (
     <section className="season section w-full flex justify-center px-3">

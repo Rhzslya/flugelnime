@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import "./home.css";
 
 export default function Home({ children }) {
