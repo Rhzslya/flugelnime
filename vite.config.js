@@ -6,6 +6,7 @@ import path from "path"; // Tambahkan ini
 
 export default defineConfig({
   plugins: [nodePolyfills(), react(), svgr()],
+  base: `/flugelnime/`,
   resolve: {
     alias: {
       "source-map-js": path.resolve(__dirname, "node_modules/source-map-js"),
