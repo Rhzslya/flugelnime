@@ -1,12 +1,13 @@
-import React, { useState, useRef, useLayoutEffect } from "react";
+import { useState, useRef, useLayoutEffect } from "react";
 import { useEffect } from "react";
 import { useMouseHovered } from "react-use";
-import { useLocation, Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import MyPagination from "../pagination/MyPagination";
-import LoadingComponents from "../loading-comp/LoadingComponent";
 import ModalLoading from "../loading-comp/ModalLoading";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
-export default function AnimeList({}) {
+export default function AnimeList({ currentPage, setCurrentPage }) {
   const [modalData, setModalData] = useState(null);
   const [timeoutId, setTimeoutId] = useState(null);
   const [height, setHeight] = useState(null);
@@ -15,14 +16,32 @@ export default function AnimeList({}) {
   const [whenHovered, setWhenHovered] = useState(false);
   const [modalHeight, setModalHeight] = useState(null);
   const ref = useRef(null);
-  const [tes, setTest] = useState([]);
   const animeBox = useRef(null);
   const modalBox = useRef(null);
   const outElement = useRef(null);
   const [animes, setAnimes] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [showModal, setShowModal] = useState(false);
+
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 640) {
+        setShowModal(true);
+      } else {
+        setShowModal(false);
+      }
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [showModal]);
+
   const seasonNowAnime = (page) =>
     `https://api.jikan.moe/v4/seasons/now?&sfw=${true}&page=${page}`;
   const { docX, docY } = useMouseHovered(ref, {
@@ -34,12 +53,6 @@ export default function AnimeList({}) {
     top: 0,
     left: 0,
   });
-
-  // useEffect(() => {
-  //   const queryParams = new URLSearchParams(location.search);
-  //   const page = queryParams.get("page") || 1;
-  //   setCurrentPage(parseInt(page));
-  // }, [location.search]);
 
   useEffect(() => {
     setLoading(true);
@@ -75,7 +88,6 @@ export default function AnimeList({}) {
       }));
 
       // Data
-
       setAnimes((prevAnimes) => {
         const existingMalIds = new Set(prevAnimes.map((anime) => anime.mal_id));
         const newMalIds = new Set();
@@ -88,9 +100,8 @@ export default function AnimeList({}) {
           }
         });
 
-        return [...prevAnimes, ...uniqueNewAnimes].slice(0, 200);
+        return [...prevAnimes, ...uniqueNewAnimes].slice(0, 50);
       });
-      // setAnimes(filteredAnimes);
     } catch (error) {
       console.error("Failed to fetch API:", error);
     } finally {
@@ -98,7 +109,7 @@ export default function AnimeList({}) {
     }
   };
 
-  const postPerPage = 20;
+  const postPerPage = 10;
   const lastPostIndex = currentPage * postPerPage;
   const firstPostIndex = lastPostIndex - postPerPage;
   const currentPost = animes.slice(firstPostIndex, lastPostIndex);
@@ -123,10 +134,16 @@ export default function AnimeList({}) {
 
   const onPageChange = (pageNumber) => {
     setLoading(false);
-    setCurrentPage(pageNumber);
     const queryString = buildQueryString(pageNumber);
     navigate(queryString);
+    setCurrentPage(pageNumber);
   };
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const page = queryParams.get("page") || currentPage;
+    setCurrentPage(+page);
+  }, [location.search]);
 
   const handleMouseEnter = (anime) => {
     setModalLoading(true);
@@ -167,96 +184,118 @@ export default function AnimeList({}) {
 
   return (
     <div
-      className=" bg-slate-600 border-4 mt-16 w-[100%] rounded "
+      className=" bg-slate-600 border-4 mt-8 sm:mt-12 lg:mt-16 w-[100%] rounded "
       ref={outElement}
     >
-      {loading || currentPost.length < 1 ? (
-        <div className="loading-comp flex items-center justify-center h-[1080px]">
-          <LoadingComponents type="spokes" color="#fff" />
-        </div>
-      ) : (
-        <>
-          <div className="last__title title__list rounded-t">
-            <h3 className="text-neutral-100 font-bold text-base bg-slate-600  rounded-t px-6 pt-2 sm:text-xl ">
-              Last Update
-            </h3>
-          </div>
-          <div
-            className="anime__box-list box__list bg-slate-600 px-6"
-            ref={animeBox}
-          >
-            <ul className="card__anime grid gap-2 min-[293px]:gap-3 md:gap-4 grid-cols-2 min-[480px]:grid-cols-3 sm:grid-cols-4  md:grid-cols-4  lg:grid-cols-5 py-4">
-              {currentPost.map((anime, index) => (
-                <li key={index} className="relative">
-                  <a
-                    href="#"
-                    className="anime__link group"
-                    onMouseEnter={() => handleMouseEnter(anime)}
-                    onMouseLeave={(e) => handleMouseLeave(e)}
-                    ref={ref}
-                  >
-                    <div className="h-full limit content__list relative overflow-hidden rounded">
-                      <span
-                        className={`absolute bg-opacity-80 top-[50%] right-0 py-0.5 px-1 text-neutral-100 text-xs sm:text-sm bg-sky-300 ${
-                          anime.day === null ? "hidden" : "block"
-                        }`}
-                      >
-                        {anime.day}
-                      </span>
+      <div className="last__title title__list rounded-t">
+        <h3 className="text-neutral-100 font-bold text-base bg-slate-600  rounded-t px-6 pt-2 sm:text-xl ">
+          Last Update
+        </h3>
+      </div>
 
-                      <img
-                        src={anime.images.webp.large_image_url}
-                        alt={anime.title}
-                        className="w-full h-full  md:h-[230px] lg:h-[250px] object-cover ease-in duration-300 block group-hover:scale-105"
-                      />
-                      <div className="play__icon absolute bottom-0 h-full w-full flex justify-center items-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-300">
-                        <svg
-                          fill="#ffffff"
-                          version="1.1"
-                          id="Capa_1"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="50px"
-                          height="50px"
-                          viewBox="0 0 408.221 408.221"
-                        >
-                          <g id="SVGRepo_bgCarrier" strokeWidth="0" />
-                          <g
-                            id="SVGRepo_tracerCarrier"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                          <g id="SVGRepo_iconCarrier">
-                            <g>
-                              <g>
-                                <path d="M204.11,0C91.388,0,0,91.388,0,204.111c0,112.725,91.388,204.11,204.11,204.11c112.729,0,204.11-91.385,204.11-204.11 C408.221,91.388,316.839,0,204.11,0z M286.547,229.971l-126.368,72.471c-17.003,9.75-30.781,1.763-30.781-17.834V140.012 c0-19.602,13.777-27.575,30.781-17.827l126.368,72.466C303.551,204.403,303.551,220.217,286.547,229.971z" />
-                              </g>
-                            </g>
-                          </g>
-                        </svg>
-                      </div>
-                      <div className="anime__title absolute bottom-0 w-full">
-                        <div className="relative py-2 px-1  z-10">
-                          <div className="overlay absolute w-full h-full bg-slate-900 top-0 left-0 -z-10 opacity-85"></div>
-                          <h4 className="text-neutral-100 text-nowrap mt-1 text-xs sm:text-sm font-bold">
-                            {anime.title.length > 20
-                              ? anime.title.substring(0, 20) + "..."
-                              : anime.title}
-                          </h4>
-                          <div className="anime__desc hidden min-[293px]:flex items-center justify-between mt-1">
-                            <span className="text-pink-300 text-xs sm:text-sm bg-slate-50 py-0.5 px-1 rounded">
-                              {anime.type}
-                            </span>
-                            <span className="text-sky-300 text-xs sm:text-sm">
-                              Episode : {anime.episodes}
-                            </span>
-                          </div>
+      <>
+        <div
+          className="anime__box-list box__list bg-slate-600 px-6"
+          ref={animeBox}
+        >
+          <ul className="card__anime grid gap-2 min-[293px]:gap-3 md:gap-4 grid-cols-2 min-[480px]:grid-cols-3 sm:grid-cols-4  md:grid-cols-4  lg:grid-cols-5 py-4">
+            {loading || currentPost.length < 1
+              ? Array.from({ length: 10 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className="relative h-[100px] min-[280px]:h-[135px] min-[300px]:h-[145px] min-[320px]:h-[160px] min-[340px]:h-[170px] min-[360px]:h-[195px] min-[400px]:h-[220px] min-[440px]:h-[245px] min-[480px]:h-[200px] min-[560px]:h-[230px] sm:h-[200px] md:h-[230px] lg:h-[250px]"
+                  >
+                    <Skeleton className=" h-[100px] min-[280px]:h-[135px] min-[300px]:h-[145px] min-[320px]:h-[160px] min-[340px]:h-[170px] min-[360px]:h-[195px] min-[400px]:h-[220px] min-[440px]:h-[245px] min-[480px]:h-[200px] min-[560px]:h-[230px] sm:h-[200px] md:h-[230px] lg:h-[250px]" />
+                    <div className="anime__title absolute bottom-0 w-full">
+                      <div className="relative py-2 px-1 z-10">
+                        <div className="overlay absolute w-full h-full bg-slate-600 -bottom-[3px] left-0 -z-10 opacity-85"></div>
+                        <h4 className="text-neutral-100 text-nowrap text-xs sm:text-sm font-bold">
+                          <Skeleton width={`80%`} />
+                        </h4>
+                        <div className="anime__desc hidden min-[293px]:flex items-center justify-between">
+                          <span className="text-pink-300 text-xs sm:text-sm bg-slate-100 py-0.5 px-1 rounded">
+                            <Skeleton width={20} className="inline-block" />
+                          </span>
+                          <span className="text-sky-300 text-xs sm:text-sm">
+                            <Skeleton className="min-[320px]:w-[70px] md:w-[85px]" />
+                          </span>
                         </div>
                       </div>
                     </div>
-                  </a>
-                </li>
-              ))}
-              {modalLoading ? (
+                  </div>
+                ))
+              : currentPost.map((anime, index) => (
+                  <li key={index} className="relative">
+                    <Link
+                      to={`/${anime.mal_id}`}
+                      className="anime__link group"
+                      onMouseEnter={() => handleMouseEnter(anime)}
+                      onMouseLeave={(e) => handleMouseLeave(e)}
+                      ref={ref}
+                    >
+                      <div className="h-full limit content__list relative overflow-hidden rounded">
+                        <span
+                          className={`absolute bg-opacity-80 top-[50%] right-0 py-0.5 px-1 text-neutral-100 text-xs sm:text-sm bg-sky-300 ${
+                            anime.day === null ? "hidden" : "block"
+                          }`}
+                        >
+                          {anime.day}
+                        </span>
+
+                        <img
+                          src={anime.images.webp.large_image_url}
+                          alt={anime.title}
+                          className="w-full h-full min-[280px]:h-[135px] min-[300px]:h-[145px] min-[320px]:h-[160px] min-[340px]:h-[170px] min-[360px]:h-[195px] min-[400px]:h-[220px] min-[440px]:h-[245px] min-[480px]:h-[200px] min-[560px]:h-[230px] sm:h-[200px] md:h-[230px] lg:h-[250px] object-cover ease-in duration-300 block group-hover:scale-105"
+                        />
+                        <div className="play__icon absolute bottom-0 h-full w-full flex justify-center items-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-300">
+                          <svg
+                            fill="#ffffff"
+                            version="1.1"
+                            id="Capa_1"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="50px"
+                            height="50px"
+                            viewBox="0 0 408.221 408.221"
+                          >
+                            <g id="SVGRepo_bgCarrier" strokeWidth="0" />
+                            <g
+                              id="SVGRepo_tracerCarrier"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                            <g id="SVGRepo_iconCarrier">
+                              <g>
+                                <g>
+                                  <path d="M204.11,0C91.388,0,0,91.388,0,204.111c0,112.725,91.388,204.11,204.11,204.11c112.729,0,204.11-91.385,204.11-204.11 C408.221,91.388,316.839,0,204.11,0z M286.547,229.971l-126.368,72.471c-17.003,9.75-30.781,1.763-30.781-17.834V140.012 c0-19.602,13.777-27.575,30.781-17.827l126.368,72.466C303.551,204.403,303.551,220.217,286.547,229.971z" />
+                                </g>
+                              </g>
+                            </g>
+                          </svg>
+                        </div>
+                        <div className="anime__title absolute bottom-0 w-full">
+                          <div className="relative py-2 px-1  z-10">
+                            <div className="overlay absolute w-full h-full bg-slate-900 top-0 left-0 -z-10 opacity-85"></div>
+                            <h4 className="text-neutral-100 text-nowrap mt-1 text-xs sm:text-sm font-bold">
+                              {anime.title.length > 20
+                                ? anime.title.substring(0, 20) + "..."
+                                : anime.title}
+                            </h4>
+                            <div className="anime__desc hidden min-[293px]:flex items-center justify-between mt-1">
+                              <span className="text-pink-300 text-xs sm:text-sm bg-slate-100 py-0.5 px-1 rounded">
+                                {anime.type}
+                              </span>
+                              <span className="text-sky-300 text-xs sm:text-sm">
+                                Episode : {anime.episodes}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+            {showModal &&
+              (modalLoading ? (
                 <div
                   className="absolute z-50"
                   ref={modalBox}
@@ -327,11 +366,10 @@ export default function AnimeList({}) {
                     </div>
                   </div>
                 )
-              )}
-            </ul>
-          </div>
-        </>
-      )}
+              ))}
+          </ul>
+        </div>
+      </>
 
       <MyPagination
         currentPage={currentPage}

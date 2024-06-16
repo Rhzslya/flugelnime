@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import "./mypagination.css";
 
 export default function MyPagination({
@@ -27,7 +26,7 @@ export default function MyPagination({
   return (
     <div className="bg-slate-600">
       <nav>
-        <ul className="flex justify-center items-center py-2">
+        <ul className="flex justify-center items-center min-h-[50px] py-2">
           <li>
             <button
               className={`flex justify-center items-center text-sm bg-sky-100 py-1 px-2 rounded-s-lg border border-gray-700 font-medium hover:bg-sky-300 hover:text-neutral-100 duration-300 ${

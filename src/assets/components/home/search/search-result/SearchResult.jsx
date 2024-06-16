@@ -5,19 +5,19 @@ import "./search-result.css";
 export default function SearchResult({
   setSearchAnimes,
   children,
-  setCurrentPage,
+  setCurrentPageSearch,
 }) {
   useEffect(() => {
     return () => {
       setSearchAnimes([]);
-      setCurrentPage(1);
+      setCurrentPageSearch(1);
     };
   }, []);
 
   return (
-    <section className="search__result section">
-      <div className="search__result container-grid grid">
-        <div className="search__content grid">{children}</div>
+    <section className="search section w-full flex justify-center px-3">
+      <div className="search__container w-[968px] lg:max-w-[968px] grid">
+        <div className="search__content grid pt-16">{children}</div>
       </div>
     </section>
   );

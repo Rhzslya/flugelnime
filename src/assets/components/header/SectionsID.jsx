@@ -2,7 +2,7 @@ export const sectionsID = [
   "home",
   "anime list",
   "ongoing",
-  "live action",
+  "seasons",
   "movies",
   "genres",
 ];

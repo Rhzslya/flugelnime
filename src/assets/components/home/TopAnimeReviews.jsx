@@ -34,6 +34,7 @@ export default function TopAnimeReviews() {
             duration: anime.duration,
             status: anime.status,
             rank: anime.rank,
+            mal_id: anime.mal_id,
           }));
 
           const shuffledAnimes = getAnimeTopReviews.sort(
@@ -86,25 +87,30 @@ export default function TopAnimeReviews() {
       }}
     >
       <div className="overlay absolute top-0 left-0 w-full h-full bg-black opacity-50 rounded"></div>
-      <Link to="" className="relative z-10">
-        <div className="w-full h-full rounded">
-          <div className="h-full">
-            {animeTopRanks.length > 0 && (
-              <div className="slide__info p-2 ">
-                <h3 className="mt-4 text-neutral-100 text-sm">
-                  TOP ANIME REVIEWS THIS WEEK
-                </h3>
-
-                <div className="mt-2">
-                  <h3 className="text-neutral-100 text-sm font-bold">
-                    {animeTopRanks[currentIndex].title}
+      {animeTopRanks.length > 0 && (
+        <Link
+          to={`/${animeTopRanks[currentIndex].mal_id}`}
+          className="relative z-10"
+        >
+          <div className="w-full h-full rounded">
+            <div className="h-full">
+              {animeTopRanks.length > 0 && (
+                <div className="slide__info p-2 ">
+                  <h3 className="mt-4 text-neutral-100 text-sm">
+                    TOP ANIME REVIEWS THIS WEEK
                   </h3>
+
+                  <div className="mt-2">
+                    <h3 className="text-neutral-100 text-sm font-bold">
+                      {animeTopRanks[currentIndex].title}
+                    </h3>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-        </div>
-      </Link>
+        </Link>
+      )}
     </div>
   );
 }

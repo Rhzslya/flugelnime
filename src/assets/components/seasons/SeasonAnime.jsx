@@ -1,14 +1,12 @@
-import { useState, useRef, useLayoutEffect } from "react";
-import { useEffect } from "react";
+import { useEffect, useState, useRef, useLayoutEffect } from "react";
+import { useParams, useLocation, useNavigate, Link } from "react-router-dom";
 import { useMouseHovered } from "react-use";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import MyPagination from "../pagination/MyPagination";
 import ModalLoading from "../loading-comp/ModalLoading";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import NotFoundPage from "../../../Context";
-export default function GenresAnime() {
-  const { genreId } = useParams();
+
+const SeasonAnime = () => {
   const [modalData, setModalData] = useState(null);
   const [timeoutId, setTimeoutId] = useState(null);
   const [height, setHeight] = useState(null);
@@ -21,14 +19,14 @@ export default function GenresAnime() {
   const modalBox = useRef(null);
   const outElement = useRef(null);
   const [animes, setAnimes] = useState([]);
+  const { year } = useParams();
+  const { season } = useParams();
   const [currentPage, setCurrentPage] = useState(1);
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { state } = useLocation();
-  const genreName = state ? state.genreName : "Unknown";
-  const [notFound, setNotFound] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
+  const location = useLocation();
+  const navigate = useNavigate();
+  // const [checkAPI, setCheckAPI] = useState([]);
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 640) {
@@ -46,58 +44,76 @@ export default function GenresAnime() {
     };
   }, [showModal]);
 
+  const seasonAnime = (page) =>
+    `https://api.jikan.moe/v4/seasons/${+year}/${season}?page=${page}`;
   const { docX, docY } = useMouseHovered(ref, {
     bound: false,
     whenHovered: whenHovered,
   });
 
+  // `https://api.jikan.moe/v4/anime?status=airing&page=${page}`;
   const [modalStyle, setModalStyle] = useState({
     top: 0,
     left: 0,
   });
 
   useEffect(() => {
-    const isValidGenreId = /^\d+$/.test(genreId);
-    if (!isValidGenreId) {
-      setNotFound(true);
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
     getAPI(currentPage);
-  }, [currentPage, genreId]);
+  }, [year, season, currentPage]);
 
   const getAPI = async (page) => {
     try {
-      const response = await fetch(
-        `https://api.jikan.moe/v4/anime?genres=${genreId}&page=${page}`
-      );
-      const data = await response.json();
-      if (!data.data || data.data.length === 0) {
-        setNotFound(true);
-        setLoading(false);
-
-        throw new Error(`No anime found for genre with id ${genreId}`);
+      const response = await fetch(seasonAnime(page));
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+      const data = await response.json();
 
-      const listAnimeByGenre = data.data.map((anime) => ({
-        title: anime.title,
-        images: anime.images,
-        type: anime.type,
-        episodes: anime.episodes === null ? "-" : anime.episodes,
-        score: anime.score,
-        genres: anime.genres.map((genre) => genre.name).join(", "),
-        synopsis: anime.synopsis,
-        duration: anime.duration,
-        status: anime.status,
-        mal_id: anime.mal_id,
-        day: anime.broadcast.day,
-      }));
+      const sortedAnimes = data.data.sort((a, b) => {
+        const dateA = new Date(a.aired.from);
+        const dateB = new Date(b.aired.from);
+        return dateB - dateA;
+      });
 
-      setAnimes(listAnimeByGenre);
+      const filteredAnimes = sortedAnimes
+        .filter((anime) =>
+          anime.season !== null
+            ? anime.season?.toLowerCase() === season.toLowerCase()
+            : ""
+        )
+        .map((anime) => ({
+          title: anime.title,
+          images: anime.images,
+          type: anime.type,
+          episodes: anime.episodes === null ? "-" : anime.episodes,
+          score: anime.score,
+          genres: anime.genres.map((genre) => genre.name).join(", "),
+          synopsis: anime.synopsis,
+          duration: anime.duration,
+          status: anime.status,
+          mal_id: anime.mal_id,
+          day: anime.broadcast.day,
+          season: anime.season,
+          year: anime.year,
+        }));
+
+      // Data
+      setAnimes((prevAnimes) => {
+        const existingMalIds = new Set(prevAnimes.map((anime) => anime.mal_id));
+        const newMalIds = new Set();
+        const uniqueNewAnimes = filteredAnimes.filter((anime) => {
+          if (existingMalIds.has(anime.mal_id) || newMalIds.has(anime.mal_id)) {
+            return false;
+          } else {
+            newMalIds.add(anime.mal_id);
+            return true;
+          }
+        });
+
+        return [...prevAnimes, ...uniqueNewAnimes].slice(0, 30);
+      });
     } catch (error) {
-      console.error(error.message);
+      console.error("Failed to fetch API:", error);
     } finally {
       setLoading(false);
     }
@@ -127,7 +143,7 @@ export default function GenresAnime() {
   };
 
   const onPageChange = (pageNumber) => {
-    setLoading(false);
+    setLoading(true);
     const queryString = buildQueryString(pageNumber);
     navigate(queryString);
     setCurrentPage(pageNumber);
@@ -176,21 +192,18 @@ export default function GenresAnime() {
     setWhenHovered(modalData !== null);
   }, [modalData, docX, docY, modalHeight]);
 
-  // const capitalizeFirst = (string) => {
-  //   return string
-  //     .split(" ")
-  //     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-  //     .join(" ");
-  // };
-
-  if (notFound) {
-    return <NotFoundPage />;
-  }
+  // console.log(animes);
+  const capitalizeFirst = (string) => {
+    return string
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  };
   return (
-    <div className=" bg-slate-600 border-4 w-[100%] rounded " ref={outElement}>
+    <div className=" bg-slate-600 border-4  w-[100%] rounded " ref={outElement}>
       <div className="last__title title__list rounded-t">
         <h3 className="text-neutral-100 font-bold text-base bg-slate-600  rounded-t px-6 pt-2 sm:text-xl ">
-          Genre : {genreName}
+          Anime {capitalizeFirst(season)} {year}
         </h3>
       </div>
 
@@ -201,9 +214,7 @@ export default function GenresAnime() {
         >
           <ul className="card__anime grid gap-2 min-[293px]:gap-3 md:gap-4 grid-cols-2 min-[480px]:grid-cols-3 sm:grid-cols-4  md:grid-cols-4  lg:grid-cols-5 py-4">
             {loading || currentPost.length < 1
-              ? Array.from({
-                  length: 10,
-                }).map((_, index) => (
+              ? Array.from({ length: 10 }).map((_, index) => (
                   <div
                     key={index}
                     className="relative h-[100px] min-[280px]:h-[135px] min-[300px]:h-[145px] min-[320px]:h-[160px] min-[340px]:h-[170px] min-[360px]:h-[195px] min-[400px]:h-[220px] min-[440px]:h-[245px] min-[480px]:h-[200px] min-[560px]:h-[230px] sm:h-[200px] md:h-[230px] lg:h-[250px]"
@@ -381,4 +392,6 @@ export default function GenresAnime() {
       />
     </div>
   );
-}
+};
+
+export default SeasonAnime;

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import "./search.css";
 import { useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 
@@ -8,27 +7,29 @@ export default function Search({
   setShowSearch,
   setSearchQuery,
   searchQuery,
-  setCurrentPage,
+  setCurrentPageSearch,
   setSearchAnimes,
+  setLoadingSearch,
+  showMenuNav,
+  setShowMenuNav,
 }) {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const baseURL = "https://api.jikan.moe/v4/anime";
   const seasonUpComing = "https://api.jikan.moe/v4/seasons/upcoming";
-
+  const [showSearchBar, setShowSearchBar] = useState(true);
   const handleSearch = (e) => {
     e.preventDefault();
     handleSubmit();
     navigate(`/search?q=${searchQuery}`);
     setSearchQuery("");
-    setCurrentPage(1);
+    setCurrentPageSearch(1);
     setSearchAnimes([]);
   };
 
-  const toggleSearch = () => {
+  const handleToggle = () => {
     setShowMenu(!showMenu);
-    setShowSearch(showSearch ? "" : "show__search-bar");
   };
 
   // Fetch Search Data
@@ -41,16 +42,20 @@ export default function Search({
         title: anime.title,
         images: anime.images,
         type: anime.type,
-        episodes: anime.episodes,
+        episodes: anime.episodes === null ? "-" : anime.episodes,
         score: anime.score,
         genres: anime.genres.map((genre) => genre.name).join(", "),
         synopsis: anime.synopsis,
         duration: anime.duration,
         status: anime.status,
+        mal_id: anime.mal_id,
+        day: anime.broadcast.day,
       }));
       setSearchAnimes(filteredAnimes);
     } catch (error) {
       console.error("Failed to fetch API", error);
+    } finally {
+      setLoadingSearch(false);
     }
   };
 
@@ -64,38 +69,75 @@ export default function Search({
 
   const handleSubmit = async () => {
     navigate(`/search?q=${searchQuery}&page=1`);
-    setCurrentPage(1);
+    setCurrentPageSearch(1);
     setSearchAnimes([]);
     fetchSearchAnimes(searchQuery);
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      // window.innerWidth >= 430 ? setShowMenu(true) : setShowMenu(false);
+      if (window.innerWidth >= 430) {
+        setShowMenu(true);
+        setShowSearchBar(true);
+      } else {
+        setShowMenu(false);
+      }
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   // Pages && Pagination
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 430) {
+        setShowSearchBar(!showMenuNav);
+      } else {
+        setShowSearchBar(true);
+      }
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [showMenuNav]);
 
   return (
     <>
-      <div className={`search__bar ${showSearch}`}>
-        <form onSubmit={handleSearch}>
-          <div className="search__bar-box">
-            <i className="uil uil-search"></i>
-            <input
-              type="text"
-              placeholder="Cari Anime Disini"
-              className="search__input"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <i
-              className="uil uil-times nav__close hide-search"
-              onClick={toggleSearch}
-            ></i>
-          </div>
-        </form>
-      </div>
-      <i
-        className={`uil uil-search show ${
-          showSearch === "show__search-bar" ? "hide" : ""
-        }`}
-        onClick={toggleSearch}
-      ></i>
+      {showSearchBar && (
+        <div className={`search__bar ${showSearch}`}>
+          <form onSubmit={handleSearch}>
+            <div className="search__bar-box p-1 justify-end items-center flex absolute bg-[#c5cbda]  min-[430px]:bg-transparent top-[48px] w-full z-10 left-0 min-[430px]:top-0 min-[430px]:relative">
+              {showMenu && (
+                <input
+                  type="text"
+                  placeholder="Cari Anime Disini"
+                  className="search__input h-[20px] rounded-sm min-[430px]:h-[30px] w-full min-[430px]:block  min-[430px]:w-[140px] min-[460px]:w-auto min-[430px]:rounded bg-neutral-100 px-2 text-sm"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              )}
+              {!showMenu ? (
+                <div className="block min-[430px]:hidden">
+                  <i className="uil uil-search" onClick={handleToggle}></i>
+                </div>
+              ) : (
+                <div className="block min-[430px]:hidden">
+                  <i className="uil uil-times" onClick={handleToggle}></i>
+                </div>
+              )}
+            </div>
+          </form>
+        </div>
+      )}
     </>
   );
 }

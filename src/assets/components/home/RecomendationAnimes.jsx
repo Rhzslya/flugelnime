@@ -36,7 +36,10 @@ export default function RecomendationAnimes() {
               type: anime.type,
               episodes: anime.episodes,
               score: anime.score,
-              genres: anime.genres.map((genre) => genre.name),
+              genres: anime.genres.map((genre) => ({
+                id: genre.mal_id,
+                name: genre.name,
+              })),
               synopsis:
                 anime.synopsis.length > 100
                   ? anime.synopsis.substring(0, 100) + "..."
@@ -44,9 +47,7 @@ export default function RecomendationAnimes() {
               duration: anime.duration,
               status: anime.status,
               rank: anime.rank,
-              score: anime.score,
             }))
-
             .filter((anime) => anime.score !== null)
             .sort(() => Math.random() - 0.5)
             .slice(0, 5);
@@ -176,10 +177,10 @@ export default function RecomendationAnimes() {
                             (genre, index) => (
                               <React.Fragment key={index}>
                                 <Link
-                                  to={`/genres/${genre.toLowerCase()}`}
+                                  to={`/genres/${genre.id}`}
                                   className="text-pink-300 hover:text-sky-300 duration-300 "
                                 >
-                                  {genre}
+                                  {genre.name}
                                 </Link>
                                 {index <
                                   recomendedAnimes[currentIndex].genres.length -

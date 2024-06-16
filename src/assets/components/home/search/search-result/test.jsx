@@ -1,18 +1,23 @@
-import { useState, useRef, useLayoutEffect } from "react";
-import { useEffect } from "react";
+import React, { useState, useRef, useLayoutEffect, useEffect } from "react";
+import MyPagination from "../../../pagination/MyPagination";
 import { useMouseHovered } from "react-use";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import MyPagination from "../pagination/MyPagination";
-import ModalLoading from "../loading-comp/ModalLoading";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import ModalLoading from "../../../loading-comp/ModalLoading";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import NotFoundPage from "../../../Context";
-export default function GenresAnime() {
-  const { genreId } = useParams();
+export default function ResultData({
+  currentPageSearch,
+  searchAnimes,
+  setCurrentPageSearch,
+  navigate,
+  loadingSearch,
+  setLoadingSearch,
+}) {
+  // Pages && Pagination
+
   const [modalData, setModalData] = useState(null);
   const [timeoutId, setTimeoutId] = useState(null);
   const [height, setHeight] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [modalLoading, setModalLoading] = useState(false);
   const [whenHovered, setWhenHovered] = useState(false);
   const [modalHeight, setModalHeight] = useState(null);
@@ -20,31 +25,9 @@ export default function GenresAnime() {
   const animeBox = useRef(null);
   const modalBox = useRef(null);
   const outElement = useRef(null);
-  const [animes, setAnimes] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+
   const location = useLocation();
-  const navigate = useNavigate();
-  const { state } = useLocation();
-  const genreName = state ? state.genreName : "Unknown";
-  const [notFound, setNotFound] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 640) {
-        setShowModal(true);
-      } else {
-        setShowModal(false);
-      }
-    };
-
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [showModal]);
+  // Pages && Pagination
 
   const { docX, docY } = useMouseHovered(ref, {
     bound: false,
@@ -56,64 +39,23 @@ export default function GenresAnime() {
     left: 0,
   });
 
-  useEffect(() => {
-    const isValidGenreId = /^\d+$/.test(genreId);
-    if (!isValidGenreId) {
-      setNotFound(true);
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-    getAPI(currentPage);
-  }, [currentPage, genreId]);
-
-  const getAPI = async (page) => {
-    try {
-      const response = await fetch(
-        `https://api.jikan.moe/v4/anime?genres=${genreId}&page=${page}`
-      );
-      const data = await response.json();
-      if (!data.data || data.data.length === 0) {
-        setNotFound(true);
-        setLoading(false);
-
-        throw new Error(`No anime found for genre with id ${genreId}`);
-      }
-
-      const listAnimeByGenre = data.data.map((anime) => ({
-        title: anime.title,
-        images: anime.images,
-        type: anime.type,
-        episodes: anime.episodes === null ? "-" : anime.episodes,
-        score: anime.score,
-        genres: anime.genres.map((genre) => genre.name).join(", "),
-        synopsis: anime.synopsis,
-        duration: anime.duration,
-        status: anime.status,
-        mal_id: anime.mal_id,
-        day: anime.broadcast.day,
-      }));
-
-      setAnimes(listAnimeByGenre);
-    } catch (error) {
-      console.error(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const postPerPage = 10;
-  const lastPostIndex = currentPage * postPerPage;
+  const lastPostIndex = currentPageSearch * postPerPage;
   const firstPostIndex = lastPostIndex - postPerPage;
-  const currentPost = animes.slice(firstPostIndex, lastPostIndex);
-  const totalPost = animes.length;
+  const currentPost = searchAnimes.slice(firstPostIndex, lastPostIndex);
+  const totalPost = searchAnimes.length;
 
   let pageNumbers = [];
   for (let i = 1; i <= Math.ceil(totalPost / postPerPage); i++) {
     pageNumbers.push(i);
   }
+  // get Query
+  function useQuery() {
+    return new URLSearchParams(useLocation().search);
+  }
 
+  let queryVal = useQuery();
+  let getQuery = queryVal.get("q");
   const buildQueryString = (page) => {
     const params = new URLSearchParams(location.search);
 
@@ -122,21 +64,19 @@ export default function GenresAnime() {
     } else {
       params.delete("page");
     }
-
     return `?${params.toString()}`;
   };
-
   const onPageChange = (pageNumber) => {
-    setLoading(false);
+    setLoadingSearch(false);
+    setCurrentPageSearch(pageNumber);
     const queryString = buildQueryString(pageNumber);
     navigate(queryString);
-    setCurrentPage(pageNumber);
   };
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
-    const page = queryParams.get("page") || currentPage;
-    setCurrentPage(+page);
+    const page = queryParams.get("page") || currentPageSearch;
+    setCurrentPageSearch(+page);
   }, [location.search]);
 
   const handleMouseEnter = (anime) => {
@@ -176,44 +116,31 @@ export default function GenresAnime() {
     setWhenHovered(modalData !== null);
   }, [modalData, docX, docY, modalHeight]);
 
-  // const capitalizeFirst = (string) => {
-  //   return string
-  //     .split(" ")
-  //     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-  //     .join(" ");
-  // };
-
-  if (notFound) {
-    return <NotFoundPage />;
-  }
   return (
     <div className=" bg-slate-600 border-4 w-[100%] rounded " ref={outElement}>
       <div className="last__title title__list rounded-t">
         <h3 className="text-neutral-100 font-bold text-base bg-slate-600  rounded-t px-6 pt-2 sm:text-xl ">
-          Genre : {genreName}
+          Search : {getQuery}
         </h3>
       </div>
-
       <>
         <div
           className="anime__box-list box__list bg-slate-600 px-6"
           ref={animeBox}
         >
           <ul className="card__anime grid gap-2 min-[293px]:gap-3 md:gap-4 grid-cols-2 min-[480px]:grid-cols-3 sm:grid-cols-4  md:grid-cols-4  lg:grid-cols-5 py-4">
-            {loading || currentPost.length < 1
-              ? Array.from({
-                  length: 10,
-                }).map((_, index) => (
+            {loadingSearch || currentPost.length < 1
+              ? Array.from({ length: 10 }).map((_, index) => (
                   <div
                     key={index}
-                    className="relative h-[100px] min-[280px]:h-[135px] min-[300px]:h-[145px] min-[320px]:h-[160px] min-[340px]:h-[170px] min-[360px]:h-[195px] min-[400px]:h-[220px] min-[440px]:h-[245px] min-[480px]:h-[200px] min-[560px]:h-[230px] sm:h-[200px] md:h-[230px] lg:h-[250px]"
+                    className="relative w-full h-[100px] min-[280px]:h-[135px] min-[300px]:h-[145px] min-[320px]:h-[160px] min-[340px]:h-[170px] min-[360px]:h-[195px] min-[400px]:h-[220px] min-[440px]:h-[245px] min-[480px]:h-[200px] min-[560px]:h-[230px] sm:h-[200px] md:h-[230px] lg:h-[250px]"
                   >
                     <Skeleton className=" h-[100px] min-[280px]:h-[135px] min-[300px]:h-[145px] min-[320px]:h-[160px] min-[340px]:h-[170px] min-[360px]:h-[195px] min-[400px]:h-[220px] min-[440px]:h-[245px] min-[480px]:h-[200px] min-[560px]:h-[230px] sm:h-[200px] md:h-[230px] lg:h-[250px]" />
                     <div className="anime__title absolute bottom-0 w-full">
                       <div className="relative py-2 px-1 z-10">
                         <div className="overlay absolute w-full h-full bg-slate-600 -bottom-[3px] left-0 -z-10 opacity-85"></div>
                         <h4 className="text-neutral-100 text-nowrap text-xs sm:text-sm font-bold">
-                          <Skeleton width={`80%`} />
+                          <Skeleton width={`80`} />
                         </h4>
                         <div className="anime__desc hidden min-[293px]:flex items-center justify-between">
                           <span className="text-pink-300 text-xs sm:text-sm bg-slate-100 py-0.5 px-1 rounded">
@@ -297,7 +224,8 @@ export default function GenresAnime() {
                     </Link>
                   </li>
                 ))}
-            {showModal && modalLoading ? (
+
+            {modalLoading ? (
               <div
                 className="absolute z-50"
                 ref={modalBox}
@@ -374,7 +302,7 @@ export default function GenresAnime() {
       </>
 
       <MyPagination
-        currentPage={currentPage}
+        currentPageSearch={currentPageSearch}
         totalPost={totalPost}
         pageNumbers={pageNumbers}
         onPageChange={onPageChange}
