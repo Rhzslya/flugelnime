@@ -157,7 +157,7 @@ export default function ResultData({
               : currentPost.map((anime, index) => (
                   <li key={index} className="relative">
                     <Link
-                      to={`/${anime.mal_id}`}
+                      to={`/flugelnime/${anime.mal_id}`}
                       className="anime__link group"
                       onMouseEnter={() => handleMouseEnter(anime)}
                       onMouseLeave={(e) => handleMouseLeave(e)}

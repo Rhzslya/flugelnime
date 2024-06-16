@@ -89,7 +89,7 @@ export default function TopAnimeReviews() {
       <div className="overlay absolute top-0 left-0 w-full h-full bg-black opacity-50 rounded"></div>
       {animeTopRanks.length > 0 && (
         <Link
-          to={`/${animeTopRanks[currentIndex].mal_id}`}
+          to={`/flugelnime/${animeTopRanks[currentIndex].mal_id}`}
           className="relative z-10"
         >
           <div className="w-full h-full rounded">

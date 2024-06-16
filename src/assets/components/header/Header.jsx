@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { sectionsID } from "./SectionsID";
 
@@ -29,7 +28,7 @@ export default function Header({
       <nav className="flex w-full px-2 min-[480px]:px-8 lg:w-[85%] h-full lg:px-0 justify-between items-center gap-1">
         <div className="flex gap-6 ">
           <div className="flex items-center font-bold m lg:ml-0 order-1 lg:order-none">
-            <NavLink to={"/"}>Flugelnime</NavLink>
+            <NavLink to={"/flugelnime/"}>Flugelnime</NavLink>
           </div>
 
           <div
@@ -50,8 +49,10 @@ export default function Header({
                   <NavLink
                     to={
                       item === "home"
-                        ? "/"
-                        : `/${item.replace(/\s+/g, "-").toLowerCase()}`
+                        ? "/flugelnime/"
+                        : `/flugelnime/${item
+                            .replace(/\s+/g, "-")
+                            .toLowerCase()}`
                     }
                     className={({ isActive }) =>
                       isActive

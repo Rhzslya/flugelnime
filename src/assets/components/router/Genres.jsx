@@ -31,7 +31,7 @@ export default function Genres() {
           {genres.map((item) => (
             <Link
               key={item.id}
-              to={`/genres/${item.id}`}
+              to={`/flugelnime/genres/${item.id}`}
               state={{ genreName: item.name }}
               className="bg-sky-300 p-2 rounded-lg shadow-md hover:bg-pink-300 transition-all duration-300 ease-in-out transform hover:scale-105"
             >

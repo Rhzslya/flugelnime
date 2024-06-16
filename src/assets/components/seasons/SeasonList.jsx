@@ -58,7 +58,7 @@ const ScheduleList = () => {
               <div className="seasons-links rounded-b bg-slate-400  flex flex-col justify-center  text-neutral-100 text-xs sm:text-sm">
                 <div className="">
                   <Link
-                    to={`/seasons/${item.year}/${item.spring}`}
+                    to={`/flugelnime/seasons/${item.year}/${item.spring}`}
                     className="block py-[2px] px-[4px] hover:bg-pink-300 te duration-300 font-semibold"
                   >
                     {capitalizeFirst(item.spring)}
@@ -66,7 +66,7 @@ const ScheduleList = () => {
                 </div>
                 <div className="">
                   <Link
-                    to={`/seasons/${item.year}/${item.summer}`}
+                    to={`/flugelnime/seasons/${item.year}/${item.summer}`}
                     className=" block py-[2px] px-[4px] hover:bg-pink-300 te duration-300 font-semibold"
                   >
                     {capitalizeFirst(item.summer)}
@@ -74,7 +74,7 @@ const ScheduleList = () => {
                 </div>
                 <div className="">
                   <Link
-                    to={`/seasons/${item.year}/${item.fall}`}
+                    to={`/flugelnime/seasons/${item.year}/${item.fall}`}
                     className="block py-[2px] px-[4px] hover:bg-pink-300 te duration-300 font-semibold"
                   >
                     {capitalizeFirst(item.fall)}
@@ -82,7 +82,7 @@ const ScheduleList = () => {
                 </div>
                 <div className="">
                   <Link
-                    to={`/seasons/${item.year}/${item.winter}`}
+                    to={`/flugelnime/seasons/${item.year}/${item.winter}`}
                     className=" block py-[2px] px-[4px] hover:bg-pink-300 te duration-300 font-semibold"
                   >
                     {capitalizeFirst(item.winter)}

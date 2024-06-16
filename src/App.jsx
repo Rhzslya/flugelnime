@@ -26,6 +26,7 @@ import RecomendationAnimes from "./assets/components/home/RecomendationAnimes";
 import Detail from "./assets/components/anime-detail/Detail";
 import NotFoundPage from "./Context";
 import ContextViews from "./assets/components/context/ContextViews";
+
 function App() {
   const [showSearch, setShowSearch] = useState("");
   const [currentPageSearch, setCurrentPageSearch] = useState(1);
@@ -78,7 +79,7 @@ function App() {
 
           <Routes>
             <Route
-              path="/"
+              path="/flugelnime/"
               element={
                 <Home>
                   <RecomendationAnimes />
@@ -89,11 +90,11 @@ function App() {
                 </Home>
               }
             />
-            <Route path="/:id" element={<Detail />} />
-            <Route path="/anime-list" element={<AnimeList />} />
-            <Route path="/genres" element={<Genres />} />
+            <Route path="/flugelnime/:id" element={<Detail />} />
+            <Route path="/flugelnime/anime-list" element={<AnimeList />} />
+            <Route path="/flugelnime/genres" element={<Genres />} />
             <Route
-              path="/seasons"
+              path="/flugelnime/seasons"
               element={
                 <Seasons>
                   <SeasonList />
@@ -101,7 +102,7 @@ function App() {
               }
             />
             <Route
-              path="/seasons/:year/:season"
+              path="/flugelnime/seasons/:year/:season"
               element={
                 <Season>
                   <SeasonAnime />
@@ -109,7 +110,7 @@ function App() {
               }
             />
             <Route
-              path="genres/:genreId"
+              path="/flugelnime/genres/:genreId"
               element={
                 <GenresBox>
                   <GenresAnime />
@@ -118,7 +119,7 @@ function App() {
             />
 
             <Route
-              path="/movies"
+              path="/flugelnime/movies"
               element={
                 <Movies>
                   <AnimeMovies />
@@ -127,7 +128,7 @@ function App() {
             />
 
             <Route
-              path="/ongoing"
+              path="/flugelnime/ongoing"
               element={
                 <Ongoing>
                   <OngoingResult />
@@ -135,7 +136,7 @@ function App() {
               }
             />
             <Route
-              path="/search"
+              path="/flugelnime/search"
               element={
                 <SearchResult
                   setSearchAnimes={setSearchAnimes}
@@ -154,7 +155,7 @@ function App() {
               }
             />
             <Route
-              path="/*"
+              path="/flugelnime/*"
               element={
                 <ContextViews>
                   <NotFoundPage />

@@ -177,7 +177,7 @@ export default function RecomendationAnimes() {
                             (genre, index) => (
                               <React.Fragment key={index}>
                                 <Link
-                                  to={`/genres/${genre.id}`}
+                                  to={`/flugelnime/genres/${genre.id}`}
                                   className="text-pink-300 hover:text-sky-300 duration-300 "
                                 >
                                   {genre.name}
