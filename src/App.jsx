@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
-
+import {
+  Routes,
+  Route,
+  useNavigate,
+  useLocation,
+  useParams,
+} from "react-router-dom";
+import { HelmetProvider, Helmet } from "react-helmet-async";
 import Header from "./assets/components/header/Header";
 import Search from "./assets/components/home/search/Search";
 import DarkMode from "./assets/components/dark-mode/DarkMode";
@@ -26,7 +32,7 @@ import RecomendationAnimes from "./assets/components/home/RecomendationAnimes";
 import Detail from "./assets/components/anime-detail/Detail";
 import NotFoundPage from "./Context";
 import ContextViews from "./assets/components/context/ContextViews";
-
+import DynamicTitle from "./assets/components/dynamic-title/DynamicTitle";
 function App() {
   const [showSearch, setShowSearch] = useState("");
   const [currentPageSearch, setCurrentPageSearch] = useState(1);
@@ -49,7 +55,8 @@ function App() {
     }
   }, [location]);
   return (
-    <>
+    <HelmetProvider>
+      <DynamicTitle />
       <Header
         showSearch={showSearch}
         setShowSearch={setShowSearch}
@@ -164,7 +171,7 @@ function App() {
           </Routes>
         }
       </main>
-    </>
+    </HelmetProvider>
   );
 }
 

@@ -22,7 +22,7 @@ export default function Search({
   const handleSearch = (e) => {
     e.preventDefault();
     handleSubmit();
-    navigate(`/search?q=${searchQuery}`);
+    navigate(`/flugelnime/search?q=${searchQuery}`);
     setSearchQuery("");
     setCurrentPageSearch(1);
     setSearchAnimes([]);
