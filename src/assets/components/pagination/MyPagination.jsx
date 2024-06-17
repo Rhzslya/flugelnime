@@ -24,7 +24,7 @@ export default function MyPagination({
 
   const visiblePages = pageNumbers.slice(startPage - 1, endPage);
   return (
-    <div className="bg-slate-600">
+    <div className="dark:bg-slate-900 bg-slate-600">
       <nav>
         <ul className="flex justify-center items-center min-h-[50px] py-2">
           <li>

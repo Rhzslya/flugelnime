@@ -73,7 +73,7 @@ function App() {
         <DarkMode showSearch={showSearch} setShowSearch={setShowSearch} />
       </Header>
 
-      <main className="main">
+      <main className="main dark:bg-slate-800 h-[100vh]">
         {
           /* <Home animes={animes} /> */
 

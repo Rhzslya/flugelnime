@@ -28,10 +28,6 @@ export default function Search({
     setSearchAnimes([]);
   };
 
-  // const handleToggle = () => {
-  //   setShowMenu(!showMenu);
-  // };
-
   // Fetch Search Data
   const fetchSearchAnimes = async (query) => {
     try {
@@ -68,7 +64,7 @@ export default function Search({
   }, [searchParams]);
 
   const handleSubmit = async () => {
-    navigate(`/search?q=${searchQuery}&page=1`);
+    navigate(`/flugelnime/search?q=${searchQuery}&page=1`);
     setCurrentPageSearch(1);
     setSearchAnimes([]);
     fetchSearchAnimes(searchQuery);
@@ -93,33 +89,33 @@ export default function Search({
   //   };
   // }, []);
   // Pages && Pagination
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     if (window.innerWidth < 430) {
-  //       setShowSearchBar(!showMenuNav);
-  //     } else {
-  //       setShowSearchBar(true);
-  //     }
-  //   };
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 430) {
+        setShowSearchBar(!showMenuNav);
+      } else {
+        setShowSearchBar(true);
+      }
+    };
 
-  //   handleResize();
+    handleResize();
 
-  //   window.addEventListener("resize", handleResize);
-  //   return () => {
-  //     window.removeEventListener("resize", handleResize);
-  //   };
-  // }, [showMenuNav]);
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [showMenuNav]);
 
   return (
     <>
       {showSearchBar && (
         <div className={`search__bar ${showSearch}`}>
           <form onSubmit={handleSearch}>
-            <div className="search__bar-box p-1 justify-end items-center flex absolute bg-[#c5cbda]  min-[430px]:bg-transparent top-[48px] w-full z-10 left-0 min-[430px]:top-0 min-[430px]:relative">
+            <div className="search__bar-box p-1 justify-end items-center flex absolute dark:bg-slate-800 bg-[#c5cbda]  min-[430px]:bg-transparent top-[48px] w-full z-10 left-0 min-[430px]:top-0 min-[430px]:relative">
               <input
                 type="text"
                 placeholder="Cari Anime Disini"
-                className="search__input h-[25px] rounded-sm min-[430px]:h-[30px] w-full min-[430px]:block  min-[430px]:w-[140px] min-[460px]:w-auto min-[430px]:rounded bg-neutral-100 px-2 text-sm"
+                className="search__input h-[20px] rounded-sm min-[430px]:h-[30px] w-full min-[430px]:block  min-[430px]:w-[140px] min-[460px]:w-auto min-[430px]:rounded bg-neutral-100 px-2 text-sm"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => setShowMenu(true)}

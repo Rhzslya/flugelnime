@@ -202,14 +202,14 @@ const SeasonAnime = () => {
   return (
     <div className=" bg-slate-600 border-4  w-[100%] rounded " ref={outElement}>
       <div className="last__title title__list rounded-t">
-        <h3 className="text-neutral-100 font-bold text-base bg-slate-600  rounded-t px-6 pt-2 sm:text-xl ">
+        <h3 className="text-neutral-100 font-bold text-base dark:bg-slate-900 bg-slate-600  rounded-t px-6 pt-2 sm:text-xl ">
           Anime {capitalizeFirst(season)} {year}
         </h3>
       </div>
 
       <>
         <div
-          className="anime__box-list box__list bg-slate-600 px-6"
+          className="anime__box-list box__list dark:bg-slate-900 bg-slate-600 px-6"
           ref={animeBox}
         >
           <ul className="card__anime grid gap-2 min-[293px]:gap-3 md:gap-4 grid-cols-2 min-[480px]:grid-cols-3 sm:grid-cols-4  md:grid-cols-4  lg:grid-cols-5 py-4">

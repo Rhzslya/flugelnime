@@ -20,11 +20,11 @@ export default function Header({
   };
 
   return (
-    <header className="w-full h-[48px] left-0 z-50 fixed flex justify-center border-b-[1px] bg-[#c5cbda] opacity-90 backdrop-blur-xl ">
+    <header className="w-full h-[48px] left-0 z-50 fixed flex justify-center dark:border-black border-b-[1px] dark:bg-slate-800 bg-[#c5cbda] opacity-90 backdrop-blur-xl ">
       <nav className="flex w-full px-2 min-[480px]:px-8 lg:w-[85%] h-full lg:px-0 justify-between items-center gap-1">
         <div className="flex gap-6 ">
           <div className="flex items-center font-bold m lg:ml-0 order-1 lg:order-none">
-            <NavLink to="/flugelnime/" end>
+            <NavLink to="/flugelnime/" className="dark:text-neutral-100" end>
               Flugelnime
             </NavLink>
           </div>
@@ -37,7 +37,7 @@ export default function Header({
             <ul
               className={`${
                 !showMenu ? "hidden lg:flex" : "flex"
-              } gap-2  lg:gap-4 flex-col lg:flex-row absolute left-0 top-[48px] px-2 min-[480px]:px-8 py-2 lg:px-0 lg:py-0 lg:top-0 bg-[#c5cbda] opacity-90 backdrop-blur-x w-full lg:relative `}
+              } gap-2  lg:gap-4 flex-col lg:flex-row absolute left-0 top-[48px] px-2 min-[480px]:px-8 py-2 lg:px-0 lg:py-0 lg:top-0 dark:bg-slate-800 dark:text-neutral-100 bg-[#c5cbda] opacity-90 backdrop-blur-x w-full lg:relative `}
             >
               {sectionsID.map((item, index) => (
                 <li
@@ -67,7 +67,7 @@ export default function Header({
             {showMenu ? (
               <div className={`block lg:hidden`}>
                 <i
-                  className="uil uil-times text-xl"
+                  className="uil uil-times text-xl dark:text-neutral-100"
                   onClick={() => setShowMenu(!showMenu)}
                 ></i>
               </div>
@@ -76,7 +76,7 @@ export default function Header({
                 className={`block lg:hidden`}
                 onClick={() => setShowMenu(!showMenu)}
               >
-                <i className="uil uil-bars text-xl"></i>
+                <i className="uil uil-bars text-xl dark:text-neutral-100"></i>
               </div>
             )}
           </div>

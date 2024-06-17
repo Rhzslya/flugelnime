@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./darkmode.css";
 import Sun from "./Sun.svg?react";
 import Moon from "./Moon.svg?react";
@@ -11,17 +11,22 @@ export default function DarkMode({
   showSearch,
   setShowSearch,
 }) {
-  const setDarkMode = () => {
-    document.querySelector("body").setAttribute("data-theme", "dark");
-  };
+  const [isDarkMode, setIsDarkMode] = useState(
+    () => localStorage.getItem("theme") === "dark"
+  );
 
-  const setLightMode = () => {
-    document.querySelector("body").setAttribute("data-theme", "light");
-  };
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [isDarkMode]);
 
-  const toggleMode = (e) => {
-    if (e.target.checked) setDarkMode();
-    else setLightMode();
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
   };
 
   return (
@@ -30,7 +35,7 @@ export default function DarkMode({
         className="dark_mode_input"
         type="checkbox"
         id="darkmode-toggle"
-        onChange={toggleMode}
+        onChange={toggleDarkMode}
       />
       <label
         className={`dark_mode_label ${display} ${
@@ -38,8 +43,8 @@ export default function DarkMode({
         }`}
         htmlFor="darkmode-toggle"
       >
-        <Sun />
         <Moon />
+        <Sun />
       </label>
     </>
   );

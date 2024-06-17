@@ -108,7 +108,7 @@ const AnimeDetail = () => {
           </div>
         </SkeletonTheme>
       ) : (
-        <div className="detail__box-list box-list bg-slate-600 p-3 md:p-4 lg:p-6 block md:flex gap-3 w-full lg:w-[960px]">
+        <div className="detail__box-list box-list dark:bg-slate-900 bg-slate-600 p-3 md:p-4 lg:p-6 block md:flex gap-3 w-full lg:w-[960px]">
           <div className="flex justify-center">
             <div className=" h-full w-[120px] min-[300px]:w-[140px]  sm:w-[160px] lg:w-[180px] sm:h-[200px] md:h-[230px] lg:h-[250px]">
               <img
