@@ -28,9 +28,9 @@ export default function Search({
     setSearchAnimes([]);
   };
 
-  const handleToggle = () => {
-    setShowMenu(!showMenu);
-  };
+  // const handleToggle = () => {
+  //   setShowMenu(!showMenu);
+  // };
 
   // Fetch Search Data
   const fetchSearchAnimes = async (query) => {
@@ -74,41 +74,41 @@ export default function Search({
     fetchSearchAnimes(searchQuery);
   };
 
-  useEffect(() => {
-    const handleResize = () => {
-      // window.innerWidth >= 430 ? setShowMenu(true) : setShowMenu(false);
-      if (window.innerWidth >= 430) {
-        setShowMenu(true);
-        setShowSearchBar(true);
-      } else {
-        setShowMenu(false);
-      }
-    };
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     // window.innerWidth >= 430 ? setShowMenu(true) : setShowMenu(false);
+  //     if (window.innerWidth >= 430) {
+  //       setShowMenu(true);
+  //       setShowSearchBar(true);
+  //     } else {
+  //       setShowMenu(false);
+  //     }
+  //   };
 
-    handleResize();
+  //   handleResize();
 
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+  //   window.addEventListener("resize", handleResize);
+  //   return () => {
+  //     window.removeEventListener("resize", handleResize);
+  //   };
+  // }, []);
   // Pages && Pagination
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 430) {
-        setShowSearchBar(!showMenuNav);
-      } else {
-        setShowSearchBar(true);
-      }
-    };
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     if (window.innerWidth < 430) {
+  //       setShowSearchBar(!showMenuNav);
+  //     } else {
+  //       setShowSearchBar(true);
+  //     }
+  //   };
 
-    handleResize();
+  //   handleResize();
 
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [showMenuNav]);
+  //   window.addEventListener("resize", handleResize);
+  //   return () => {
+  //     window.removeEventListener("resize", handleResize);
+  //   };
+  // }, [showMenuNav]);
 
   return (
     <>
@@ -116,25 +116,14 @@ export default function Search({
         <div className={`search__bar ${showSearch}`}>
           <form onSubmit={handleSearch}>
             <div className="search__bar-box p-1 justify-end items-center flex absolute bg-[#c5cbda]  min-[430px]:bg-transparent top-[48px] w-full z-10 left-0 min-[430px]:top-0 min-[430px]:relative">
-              {showMenu && (
-                <input
-                  type="text"
-                  placeholder="Cari Anime Disini"
-                  className="search__input h-[20px] rounded-sm min-[430px]:h-[30px] w-full min-[430px]:block  min-[430px]:w-[140px] min-[460px]:w-auto min-[430px]:rounded bg-neutral-100 px-2 text-sm"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onFocus={() => setShowMenu(true)}
-                />
-              )}
-              {!showMenu ? (
-                <div className="block min-[430px]:hidden">
-                  <i className="uil uil-search" onClick={handleToggle}></i>
-                </div>
-              ) : (
-                <div className="block min-[430px]:hidden">
-                  <i className="uil uil-times" onClick={handleToggle}></i>
-                </div>
-              )}
+              <input
+                type="text"
+                placeholder="Cari Anime Disini"
+                className="search__input h-[25px] rounded-sm min-[430px]:h-[30px] w-full min-[430px]:block  min-[430px]:w-[140px] min-[460px]:w-auto min-[430px]:rounded bg-neutral-100 px-2 text-sm"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setShowMenu(true)}
+              />
             </div>
           </form>
         </div>
