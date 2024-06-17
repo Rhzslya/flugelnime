@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Page Not Found</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        text-align: center;
+        background-color: #c5cbda;
+        font-family: Arial, sans-serif;
+      }
+
+      section {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding: 0 12px;
+      }
+
+      .context__container {
+        width: 968px;
+        max-width: 100%;
+        display: grid;
+      }
+
+      .content__box {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      img {
+        max-width: 800px;
+        height: auto;
+      }
+      .message {
+        margin-top: 20px;
+        font-size: 24px;
+        color: #f9a8d4;
+      }
+      a {
+        text-decoration: none;
+        color: #be185d;
+        transition: all 0.3s;
+      }
+      a:hover {
+        color: #7dd3fc;
+      }
+
+      @media (min-width: 1024px) {
+        .context__container {
+          max-width: 968px; /* On large screens, set the max-width to 968px */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="context section">
+      <div class="context__container">
+        <div class="context__content grid">
+          <div class="content__box">
+            <img src="404.png" alt="" />
+            <h3 class="message">
+              Page Not Found, Go to <a href="/flugelnime/">Home</a>
+            </h3>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
