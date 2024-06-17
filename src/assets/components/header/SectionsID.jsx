@@ -1,8 +1,1 @@
-export const sectionsID = [
-  "home",
-  "anime list",
-  "ongoing",
-  "seasons",
-  "movies",
-  "genres",
-];
+export const sectionsID = ["home", "ongoing", "seasons", "movies", "genres"];

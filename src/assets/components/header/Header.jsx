@@ -11,11 +11,6 @@ export default function Header({
   setShowMenu,
 }) {
   const navigate = useNavigate();
-  const handleHomeClick = (e) => {
-    e.preventDefault();
-    setCurrentPage(1);
-    navigate("/flugelnime/");
-  };
 
   const capitalizeFirst = (string) => {
     return string
@@ -23,12 +18,15 @@ export default function Header({
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
   };
+
   return (
     <header className="w-full h-[48px] left-0 z-50 fixed flex justify-center border-b-[1px] bg-[#c5cbda] opacity-90 backdrop-blur-xl ">
       <nav className="flex w-full px-2 min-[480px]:px-8 lg:w-[85%] h-full lg:px-0 justify-between items-center gap-1">
         <div className="flex gap-6 ">
           <div className="flex items-center font-bold m lg:ml-0 order-1 lg:order-none">
-            <NavLink to={"/flugelnime/"}>Flugelnime</NavLink>
+            <NavLink to="/flugelnime/" end>
+              Flugelnime
+            </NavLink>
           </div>
 
           <div
@@ -54,12 +52,12 @@ export default function Header({
                             .replace(/\s+/g, "-")
                             .toLowerCase()}`
                     }
+                    end
                     className={({ isActive }) =>
                       isActive
                         ? "nav__link text-pink-300"
                         : "nav__link hover:text-pink-300"
                     }
-                    onClick={item === "home" ? handleHomeClick : undefined}
                   >
                     {capitalizeFirst(item)}
                   </NavLink>

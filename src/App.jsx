@@ -91,7 +91,6 @@ function App() {
               }
             />
             <Route path="/flugelnime/:id" element={<Detail />} />
-            <Route path="/flugelnime/anime-list" element={<AnimeList />} />
             <Route path="/flugelnime/genres" element={<Genres />} />
             <Route
               path="/flugelnime/seasons"

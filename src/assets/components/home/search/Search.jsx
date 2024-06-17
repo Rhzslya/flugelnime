@@ -123,6 +123,7 @@ export default function Search({
                   className="search__input h-[20px] rounded-sm min-[430px]:h-[30px] w-full min-[430px]:block  min-[430px]:w-[140px] min-[460px]:w-auto min-[430px]:rounded bg-neutral-100 px-2 text-sm"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setShowMenu(true)}
                 />
               )}
               {!showMenu ? (

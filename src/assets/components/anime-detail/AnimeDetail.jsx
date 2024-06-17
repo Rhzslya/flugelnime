@@ -197,6 +197,7 @@ const AnimeDetail = () => {
                 <React.Fragment key={index}>
                   <Link
                     to={`/flugelnime/genres/${genre.id}`}
+                    state={{ genreName: genre.name }}
                     className="text-neutral-100 hover:text-pink-300 hover:bg-neutral-100 duration-300 px-1 border-[1px] border-neutral-100 rounded w-fit text-sm"
                   >
                     {genre.name}
