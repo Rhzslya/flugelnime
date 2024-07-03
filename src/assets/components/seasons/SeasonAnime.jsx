@@ -153,7 +153,7 @@ const SeasonAnime = () => {
     const queryParams = new URLSearchParams(location.search);
     const page = queryParams.get("page") || currentPage;
     setCurrentPage(+page);
-  }, [location.search]);
+  }, [currentPage, location.search]);
 
   const handleMouseEnter = (anime) => {
     setModalLoading(true);
@@ -190,7 +190,7 @@ const SeasonAnime = () => {
       });
     }
     setWhenHovered(modalData !== null);
-  }, [modalData, docX, docY, modalHeight]);
+  }, [modalData, docX, docY, modalHeight, height]);
 
   // console.log(animes);
   const capitalizeFirst = (string) => {

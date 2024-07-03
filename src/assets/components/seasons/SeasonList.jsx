@@ -48,7 +48,7 @@ const ScheduleList = () => {
 
       <div className="anime__box-list box__list dark:bg-slate-900 bg-slate-600 px-6">
         <div className="grid  gap-2 min-[293px]:gap-3 md:gap-4 grid-cols min-[240px]:grid-cols-2 min-[480px]:grid-cols-3 sm:grid-cols-4  md:grid-cols-4  lg:grid-cols-5 py-4">
-          {schedule.map((item, index) => (
+          {schedule?.map((item, index) => (
             <div className="" key={index}>
               <div className="relative bg-neutral-100 text-center py-1 rounded-t ">
                 <h4 className=" text-sky-300 font-bold text-[14px] text-sm  sm:text-base">
@@ -56,38 +56,46 @@ const ScheduleList = () => {
                 </h4>
               </div>
               <div className="seasons-links rounded-b bg-slate-400  flex flex-col justify-center  text-neutral-100 text-xs sm:text-sm">
-                <div className="">
-                  <Link
-                    to={`/flugelnime/seasons/${item.year}/${item.spring}`}
-                    className="block py-[2px] px-[4px] hover:bg-pink-300 te duration-300 font-semibold"
-                  >
-                    {capitalizeFirst(item.spring)}
-                  </Link>
-                </div>
-                <div className="">
-                  <Link
-                    to={`/flugelnime/seasons/${item.year}/${item.summer}`}
-                    className=" block py-[2px] px-[4px] hover:bg-pink-300 te duration-300 font-semibold"
-                  >
-                    {capitalizeFirst(item.summer)}
-                  </Link>
-                </div>
-                <div className="">
-                  <Link
-                    to={`/flugelnime/seasons/${item.year}/${item.fall}`}
-                    className="block py-[2px] px-[4px] hover:bg-pink-300 te duration-300 font-semibold"
-                  >
-                    {capitalizeFirst(item.fall)}
-                  </Link>
-                </div>
-                <div className="">
-                  <Link
-                    to={`/flugelnime/seasons/${item.year}/${item.winter}`}
-                    className=" block py-[2px] px-[4px] hover:bg-pink-300 te duration-300 font-semibold"
-                  >
-                    {capitalizeFirst(item.winter)}
-                  </Link>
-                </div>
+                {item.spring && (
+                  <div className="">
+                    <Link
+                      to={`/flugelnime/seasons/${item.year}/${item.spring}`}
+                      className="block py-[2px] px-[4px] hover:bg-pink-300 te duration-300 font-semibold"
+                    >
+                      {capitalizeFirst(item.spring)}
+                    </Link>
+                  </div>
+                )}
+                {item.summer && (
+                  <div className="">
+                    <Link
+                      to={`/flugelnime/seasons/${item.year}/${item.summer}`}
+                      className=" block py-[2px] px-[4px] hover:bg-pink-300 te duration-300 font-semibold"
+                    >
+                      {capitalizeFirst(item.summer)}
+                    </Link>
+                  </div>
+                )}
+                {item.fall && (
+                  <div className="">
+                    <Link
+                      to={`/flugelnime/seasons/${item.year}/${item.fall}`}
+                      className="block py-[2px] px-[4px] hover:bg-pink-300 te duration-300 font-semibold"
+                    >
+                      {capitalizeFirst(item.fall)}
+                    </Link>
+                  </div>
+                )}
+                {item.winter && (
+                  <div className="">
+                    <Link
+                      to={`/flugelnime/seasons/${item.year}/${item.winter}`}
+                      className=" block py-[2px] px-[4px] hover:bg-pink-300 te duration-300 font-semibold"
+                    >
+                      {capitalizeFirst(item.winter)}
+                    </Link>
+                  </div>
+                )}
               </div>
             </div>
           ))}
